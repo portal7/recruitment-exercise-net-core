@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 using FluentAssertions;
+using Oceans.Exercise;
 
 namespace Oceans.Test
 {

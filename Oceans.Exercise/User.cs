@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Oceans.Exercise
@@ -37,7 +38,10 @@ namespace Oceans.Exercise
             get
             {
                 //Use LINQ to get the right number
-                return Subscriptions.Select(_ => 0).FirstOrDefault();
+                //return Subscriptions.Select(_ => 0).FirstOrDefault();
+                return Subscriptions
+                    .Where(x => IsUnderExpirationDate(x.ExpirationYear,x.ExpirationMonth))
+                    .Count();
             }
         }
 
@@ -78,6 +82,23 @@ namespace Oceans.Exercise
             {
                 Name = $"Recruiting {nameFromTuple}";
             }
+        }
+
+
+        private bool IsUnderExpirationDate(int year, int month)
+        {
+            var currentYear = DateTime.Now.Year;
+
+            // checking year 
+            if (year < currentYear)
+                return false;
+
+            // if the year is in the same year 
+
+            if ((year == currentYear || year > currentYear) && month >= DateTime.Now.Month)
+                return false;
+
+            return true;
         }
     }
 }
