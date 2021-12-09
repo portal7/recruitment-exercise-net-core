@@ -38,32 +38,30 @@ namespace Oceans.Exercise
             get
             {
                 //Use LINQ to get the right number
-                //return Subscriptions.Select(_ => 0).FirstOrDefault();
-                return Subscriptions
-                    .Where(x => IsUnderExpirationDate(x.ExpirationYear,x.ExpirationMonth))
-                    .Count();
+                return Subscriptions.Count(x => FilterByExpiratedSuscription(x));
             }
         }
 
         /// <summary>
-        /// Rewrite this method using discard for output variable
+        /// Rewrite this method using discard for output variable (Done)
         /// </summary>
         public void UpdateUserName()
         {
             const string strForExercise = "1";
 
-            if (int.TryParse(strForExercise, out int myOutputVariable))
+            if (int.TryParse(strForExercise, out _))
             {
                 Name = "Oceans Code Experts";
             }
         }
 
         /// <summary>
-        /// Rewrite this method to return a tuple of Name, PaymentType and the local variable
+        /// Rewrite this method to return a tuple of Name, PaymentType and the local variable (Done)
         /// </summary>
-        public void UserInformation()
+        public Tuple<string, PaymentType, bool> UserInformation()
         {
-            bool codeExperts = true;
+            const bool codeExperts = true;
+            return new Tuple<string, PaymentType, bool>(this.Name, this.PaymentType, codeExperts);
         }
 
         /// <summary>
@@ -72,11 +70,8 @@ namespace Oceans.Exercise
         /// </summary>
         public void UpdateUserInformation()
         {
-            string nameFromTuple = string.Empty;
-            bool codeExpertsFromTuple = false;
-
-            //deconstruct the tuple
-            UserInformation();
+            //deconstructing the tuple
+            var (nameFromTuple, _, codeExpertsFromTuple) = UserInformation();
 
             if (codeExpertsFromTuple)
             {
@@ -84,21 +79,19 @@ namespace Oceans.Exercise
             }
         }
 
-
-        private bool IsUnderExpirationDate(int year, int month)
+        private bool FilterByExpiratedSuscription(Subscription suscription)
         {
             var currentYear = DateTime.Now.Year;
 
-            // checking year 
-            if (year < currentYear)
-                return false;
+            // checking year of expiration date if it is greater than current year
+            if (suscription.ExpirationYear < currentYear)
+                return true;
 
-            // if the year is in the same year 
+            // checking month (if year is the same, check month too) otherwise return false
+            if (suscription.ExpirationYear == currentYear && suscription.ExpirationMonth < DateTime.Now.Month)
+                return true;
 
-            if ((year == currentYear || year > currentYear) && month >= DateTime.Now.Month)
-                return false;
-
-            return true;
+            return false;
         }
     }
 }
